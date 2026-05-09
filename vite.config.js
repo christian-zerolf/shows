@@ -1,11 +1,14 @@
 import { defineConfig } from "vite";
 
+const production = process.env.NODE_ENV === "production";
+
 export default defineConfig({
-  root: "/",
-  publicDir: "public",
+  root: "src",
+  base: production ? "/nombre-proyecto/" : "/development",
+  publicDir: "../public",
   plugins: [],
   server: { port: 5173 },
   build: {
-    outDir: "dist",
+    outDir: "../dist",
   },
 });
