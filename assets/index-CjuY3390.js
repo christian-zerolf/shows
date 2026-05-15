@@ -1,0 +1,11 @@
+(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin===`use-credentials`?t.credentials=`include`:e.crossOrigin===`anonymous`?t.credentials=`omit`:t.credentials=`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var e=`https://placehold.co/210x295`,t=`https://api.tvmaze.com/shows/`,n=async n=>{let r=`${t}${n}`;try{let t=await fetch(r);if(!t.ok)throw Error(`status: ${t.status}`);let n=await t.json();return{name:n.name,rating:n.rating,image:n.image?.medium??e}}catch(e){console.error(`GET ${r} ${e}`)}},r=async e=>{let n=`${t}${e}/episodes`;try{let e=await fetch(n);if(!e.ok)throw Error(`status: ${e.status}`);let t=(await e.json()).map(e=>({number:e.number,season:e.season,rating:e.rating.average}));return Object.groupBy(t,e=>e.season)}catch(e){console.error(`GET ${n} ${e}`)}},i=document.querySelector(`#input-id`),a=document.querySelector(`header`),o=document.querySelector(`.episodes`),s=e=>`
+    <div class="episode episode-${e.number} rating-${Math.floor(e.rating)}">${e.rating??`N/A`}</div>
+    `,c=(e,t)=>`
+    <article class="season">
+      <header class="season-header">S${t}</header>
+      ${e.map(e=>s(e)).join(``)}
+    </article>
+    `,l=async e=>{a.setHTMLUnsafe(``),o.setHTMLUnsafe(``);let t=await n(e),i=await r(e),s=t?`
+    <img src="${t.image}" width="214" height="299" alt="Promotional poster for the TV show '${t.name}'" class="poster">
+    <h1>${t.name}</h1>
+    `:`<p>Show not found. Please try a different ID.</p>`;if(a.setHTMLUnsafe(s),i){let e=Object.values(i).map((e,t)=>c(e,t+1));o.setHTMLUnsafe(e.join(``))}};i.addEventListener(`change`,async()=>{let e=i.value;e&&await l(e)}),l(`83`);
